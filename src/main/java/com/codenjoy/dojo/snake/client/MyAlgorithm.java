@@ -41,7 +41,7 @@ public class MyAlgorithm {
             LPoint next = trace.get(1);
             return coordinate(next,head);
         }
-        return Direction.random();
+        return solve();
     }
 
     private Direction coordinate(LPoint next, Point head) {
