@@ -24,7 +24,7 @@ public class Lee {
     }
 
 
-    int get(LPoint p){
+    public int get(LPoint p){
         return board[p.y][p.x];
     }
 
@@ -58,7 +58,7 @@ public class Lee {
                 .collect(Collectors.toList());
     }
 
-    void initializeBoard(List<LPoint> obstacles){
+    private void initializeBoard(List<LPoint> obstacles){
         IntStream.range(0, width).boxed().flatMap(x ->
                 IntStream.range(0, height).mapToObj(y ->
                         LPoint.of(x,y)

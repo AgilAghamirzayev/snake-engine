@@ -14,7 +14,7 @@ public class MyAlgorithm {
     private  Point head;
     private  Point apple;
     private  Lee lee;
-    private  ArrayList<Point> obstacles = new ArrayList<>();
+    private  ArrayList<LPoint> obstacles = new ArrayList<>();
 
     public MyAlgorithm(Board board) {
         List<Point> walls = board.getWalls();
@@ -23,23 +23,24 @@ public class MyAlgorithm {
         apple = board.getApples().get(0);
         head = board.getHead();
 
-        obstacles.addAll(walls);
-        obstacles.add(stone);
-        obstacles.addAll(snake);
+        obstacles.addAll(walls.stream().map(a -> LPoint.of(a.getX(), a.getY())).collect(Collectors.toList()));
+        obstacles.add(LPoint.of(stone.getX(),stone.getY()));
+        obstacles.addAll(snake.stream().map(a -> LPoint.of(a.getX(), a.getY())).collect(Collectors.toList()));
 
         lee = new Lee(board.size(), board.size());
     }
 
     public Direction solve(){
-        Optional<List<LPoint>> points = lee.trace(
-                new LPoint(head.getX(), head.getY()),
-                new LPoint(apple.getX(), apple.getY()),
-                obstacles.stream().map(a -> new LPoint(a.getX(),a.getY())).collect(Collectors.toList()));
+
+        LPoint l_head = LPoint.of(head.getX(),head.getY());
+        LPoint l_apple = LPoint.of(apple.getX(),apple.getY());
+
+        Optional<List<LPoint>> points = lee.trace(l_head, l_apple, obstacles);
         if (points.isPresent()){
             List<LPoint> trace = points.get();
             System.out.printf("Green apple trace: %s\n",trace);
             LPoint next = trace.get(1);
-            return coordinate(next,head);
+            return coordinate(next, head);
         }
         return solve();
     }
