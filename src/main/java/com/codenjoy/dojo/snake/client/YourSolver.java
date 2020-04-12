@@ -34,7 +34,11 @@ import com.codenjoy.dojo.services.RandomDice;
  */
 public class YourSolver implements Solver<Board> {
 
+    private Dice dice;
+    private Board board;
+
     public YourSolver(Dice dice) {
+        this.dice = dice;
     }
 
     @Override

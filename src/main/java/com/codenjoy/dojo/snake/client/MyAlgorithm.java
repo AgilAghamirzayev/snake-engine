@@ -11,10 +11,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MyAlgorithm {
-    private  Point head;
-    private  Point apple;
-    private  Lee lee;
-    private  ArrayList<LPoint> obstacles = new ArrayList<>();
+    private final Point head;
+    private final Point apple;
+    private final Board board;
+    private final Lee lee;
+    private final ArrayList<LPoint> obstacles = new ArrayList<>();
 
     public MyAlgorithm(Board board) {
         List<Point> walls = board.getWalls();
@@ -22,15 +23,18 @@ public class MyAlgorithm {
         Point stone = board.getStones().get(0);
         apple = board.getApples().get(0);
         head = board.getHead();
+        this.board = board;
 
         obstacles.addAll(walls.stream().map(a -> LPoint.of(a.getX(), a.getY())).collect(Collectors.toList()));
-        obstacles.add(LPoint.of(stone.getX(),stone.getY()));
+        obstacles.add(LPoint.of(stone.getX(), stone.getY()));
         obstacles.addAll(snake.stream().map(a -> LPoint.of(a.getX(), a.getY())).collect(Collectors.toList()));
 
         lee = new Lee(board.size(), board.size());
     }
 
     public Direction solve(){
+
+        if (board.isGameOver()) return solve();
 
         LPoint l_head = LPoint.of(head.getX(),head.getY());
         LPoint l_apple = LPoint.of(apple.getX(),apple.getY());
@@ -41,8 +45,8 @@ public class MyAlgorithm {
             System.out.printf("Green apple trace: %s\n",trace);
             LPoint next = trace.get(1);
             return coordinate(next, head);
-        }
-        return solve();
+        } else return solve();
+
     }
 
     private Direction coordinate(LPoint next, Point head) {

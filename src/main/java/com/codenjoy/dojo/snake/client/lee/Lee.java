@@ -17,12 +17,11 @@ public class Lee {
     private final int START = -1; // any negative number
     private final int OBSTACLE = -1; // any negative number
 
-    public Lee(int width, int height) {
+    public Lee(int width, int height){
         this.width = width;
         this.height = height;
         this.board = new int[height][width];
     }
-
 
     public int get(LPoint p){
         return board[p.y][p.x];
@@ -43,7 +42,7 @@ public class Lee {
     private Stream<LPoint> neighbours(LPoint point){
         return deltas.stream()
                 .map(d -> d.move(point))
-                .filter(p -> isOnBoard(p));
+                .filter(this::isOnBoard);
     }
 
     private Set<LPoint> neighboursUnvisited(LPoint point){
@@ -76,12 +75,12 @@ public class Lee {
         while (!(curr.isEmpty() || found)){
             counter[0]++;
             Set<LPoint> next = curr.stream()
-                    .map(p -> neighboursUnvisited(p))
+                    .map(this::neighboursUnvisited)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toSet());
             next.forEach(p -> set(p,counter[0]));
             found = next.contains(finish);
-            printMe(Collections.emptyList());
+            //printMe(Collections.emptyList());
             curr.clear();
             curr.addAll(next);
         }
@@ -97,25 +96,25 @@ public class Lee {
             path.addFirst(prev_p);
             curr_p = prev_p;
         }
-        printMe(path);
+       // printMe(path);
         return Optional.of(path);
     }
 
-    public String formatted(LPoint point, List<LPoint> path) {
-        int val = get(point);
-        if (val == OBSTACLE) return " XX";
-        if (path.isEmpty()) return String.format("%3d", val);       // intermediate steps
-        if (path.contains(point)) return String.format("%3d", val); // final step
-        return " --";
-    }
-
-    void printMe(List<LPoint> path) {
-        String s = IntStream.range(0, height).mapToObj(y ->
-                IntStream.range(0, width)
-                        .mapToObj(x -> LPoint.of(x, y))
-                        .map(p -> formatted(p, path))
-                        .collect(Collectors.joining())
-        ).collect(Collectors.joining("\n"));
-        System.out.printf("%s\n\n", s);
-    }
+//    public String formatted(LPoint point, List<LPoint> path) {
+//        int val = get(point);
+//        if (val == OBSTACLE) return " XX";
+//        if (path.isEmpty()) return String.format("%3d", val);       // intermediate steps
+//        if (path.contains(point)) return String.format("%3d", val); // final step
+//        return " --";
+//    }
+//
+//    void printMe(List<LPoint> path) {
+//        String s = IntStream.range(0, height).mapToObj(y ->
+//                IntStream.range(0, width)
+//                        .mapToObj(x -> LPoint.of(x, y))
+//                        .map(p -> formatted(p, path))
+//                        .collect(Collectors.joining())
+//        ).collect(Collectors.joining("\n"));
+//        System.out.printf("%s\n\n", s);
+//    }
 }
